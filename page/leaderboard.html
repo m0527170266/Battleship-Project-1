@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טבלת שיאים - צוללות</title>
+    <link rel="stylesheet" href="../style/main.css">
+    <link rel="stylesheet" href="../style/leaderboard.css">
+</head>
+<body>
+
+    <header>
+        <h1>היכל התהילה</h1>
+    </header>
+
+    <main>
+        <section class="form-container" style="max-width: 600px;">
+            <h2 style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                הצוללנים המצטיינים
+            </h2>
+            
+            <table id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>דירוג</th>
+                        <th>שם שחקן</th>
+                        <th>ניקוד</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <tr>
+                        <td colspan="3" style="padding: 30px; color: #666;">
+                            עדין אין שיאים... זה הזמן להיות הראשונים בטבלה!
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <button id="back-btn">חזרה לתפריט הראשי</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>סמינר מאיר - פרויקט JS</p>
+    </footer>
+
+    <script>
+        document.getElementById('back-btn').addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+
+/* עיצוב ספציפי לדף טבלת השיאים */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: var(--denim-blue);
+    color: var(--pure-white);
+}
+
+tr:hover {
+    background-color: rgba(26, 60, 90, 0.05);
+}
+
+/* הודעת ה"אין שיאים" */
+.no-data {
+    padding: 30px;
+    color: #666;
+    font-style: italic;
+}

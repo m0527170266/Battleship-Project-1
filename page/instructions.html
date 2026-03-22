@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הוראות המשחק - צוללות</title>
+    <link rel="stylesheet" href="../style/main.css">
+</head>
+<body>
+
+    <header>
+        <h1>הוראות המשחק</h1>
+    </header>
+
+    <main>
+        <section class="form-container" style="max-width: 700px;">
+            <h2>איך מנצחים בים?</h2>
+            
+            <div style="text-align: right; line-height: 1.8; color: var(--text-dark);">
+                <p>ברוכים הבאים למפקדת הצי! המשימה שלכם פשוטה: להשמיד את כל צוללות האויב.</p>
+                <br>
+                <ul>
+                    <li><strong>המטרה:</strong> עליכם לחשוף ולהטביע את כל הצוללות המסתתרות בלוח של המחשב.</li>
+                    <li><strong>מהלך התור:</strong> לוחצים על משבצת בלוח. אם פגעתם - המשבצת תהפוך לאדומה ותקבלו תור נוסף!</li>
+                    <li><strong>החטאה:</strong> אם פגעתם במים, התור עובר למחשב.</li>
+                    <li><strong>רמות קושי:</strong> ברמה הקלה זה הלוח קטן. 
+                        <br>
+                        ברמה הקשה זה הלוח הגדול יותר וכן יש לכם זמן מוגבל לכל פעולה.</li>
+                </ul>
+            </div>
+
+            <div style="margin-top: 30px; text-align: center;">
+                <img src="../image/עוגן.jpg" alt="עוגן" style="width: 100px; opacity: 0.8; margin-bottom: 20px;">
+                <br>
+                <button id="back-to-menu">חזרה לתפריט הראשי</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>סמינר מאיר - פרויקט JS</p>
+    </footer>
+
+    <script>
+        // כפתור חזרה לדף הבית
+        document.getElementById('back-to-menu').addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+    </script>
+</body>
+</html>
+
