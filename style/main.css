@@ -1,13 +1,13 @@
-/* הגדרת משתני צבע לפי התמונה ששלחת */
+/* הגדרת משתני צבע חדשים וחדים יותר */
 :root {
-    --navy-blue: #2c3e50; /* כחול כהה (דומה לג'ינס) */
-    --ocean-blue: #34495e;
-    --nautical-red: #e74c3c; /* אדום חי */
-    --cloud-white: #ecf0f1; /* לבן מעט שבור */
-    --text-color: #2c3e50;
+    --denim-blue: #1a3c5a;    /* כחול ג'ינס כהה וסמכותי */
+    --pure-white: #ffffff;    /* לבן נקי לחלוטין */
+    --nautical-red: #d90429;  /* אדום חי ועמוק (לא כתום!) */
+    --soft-bg: #f8f9fa;       /* רקע בהיר מאוד, כמעט לבן, כדי לשבור את האפור */
+    --text-dark: #000814;     /* טקסט כמעט שחור לקריאות מקסימלית */
 }
 
-/* הגדרות כלליות ורספונסיביות */
+/* הגדרות בסיס */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -15,24 +15,42 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--cloud-white);
-    color: var(--text-color);
+    font-family: 'Assistant', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+
+    /* הגדרות הרקע שימתחו את התמונה על כל המסך */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), 
+                      url('../image/ocean-bg.jpg');
+    
+    background-position: center center; /* ממרכז את התמונה */
+    background-repeat: no-repeat;       /* מונע מהתמונה לחזור על עצמה */
+    background-size: 100% 100%;        /* כוח! מותח את התמונה בדיוק לגובה ולרוחב של המסך */
+    background-attachment: fixed;       /* משאיר את הרקע יציב */
+}
+/* שאר הקוד של ה-header, footer ו-form-container נשאר אותו דבר */
+
+.form-container {
+    background: rgba(255, 255, 255, 0.20); /* לבן נקי עם שקיפות עדינה */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border: 3px solid var(--denim-blue);
+    backdrop-filter: blur(10px); /* אפקט זכוכית יוקרתי שמבליט את הטופס מהים */
 }
 
-/* כותרת עליונה */
 header {
-    background-color: var(--navy-blue);
-    color: white;
-    padding: 2rem;
+    background-color: var(--denim-blue);
+    color: var(--pure-white);
+    padding: 2.5rem;
     text-align: center;
-    border-bottom: 5px solid var(--nautical-red);
+    border-bottom: 6px solid var(--nautical-red); /* אדום ברור */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* תוכן מרכזי - סידור רספונסיבי (דרישה 44) */
 main {
     flex: 1;
     display: flex;
@@ -40,94 +58,96 @@ main {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    gap: 2rem;
 }
 
-/* עיצוב הטופס (דרישה 98) */
+/* עיצוב הטופס - לבן נקי וחד */
 .form-container {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    border: 2px solid var(--navy-blue);
+    background: var(--pure-white);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* צל עדין יותר */
+    border: 2px solid var(--denim-blue);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
 }
 
 h2 {
-    color: var(--nautical-red);
-    margin-bottom: 20px;
+    color: var(--denim-blue);
+    margin-bottom: 25px;
     text-align: center;
-}
-
-.input-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
+    font-size: 1.8rem;
+    border-bottom: 2px solid var(--nautical-red);
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 10px;
 }
 
 label {
-    margin-bottom: 5px;
-    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    color: var(--denim-blue);
 }
 
 input, select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-/* כפתור בעיצוב ימי */
-button {
     width: 100%;
     padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: var(--pure-white);
+}
+
+input:focus, select:focus {
+    border-color: var(--nautical-red);
+    outline: none;
+}
+
+/* כפתור אדום אמיתי */
+button {
+    width: 100%;
+    padding: 15px;
     background-color: var(--nautical-red);
-    color: white;
+    color: var(--pure-white);
     border: none;
-    border-radius: 5px;
-    font-size: 1.1rem;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 button:hover {
-    background-color: #c0392b;
+    background-color: #b90422; /* אדום כהה יותר במעבר עכבר */
+    transform: translateY(-2px);
 }
 
-/* תפריט ניווט תחתון */
+/* ניווט */
 .home-nav {
+    margin-top: 30px;
     display: flex;
-    gap: 20px;
+    gap: 25px;
 }
 
 .home-nav a {
     text-decoration: none;
-    color: var(--navy-blue);
-    font-weight: bold;
-    border-bottom: 2px solid transparent;
-    transition: border 0.3s;
+    color: var(--denim-blue);
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .home-nav a:hover {
-    border-bottom: 2px solid var(--nautical-red);
+    color: var(--nautical-red);
 }
 
 footer {
-    text-align: center;
-    padding: 1rem;
-    background: var(--navy-blue);
-    color: white;
-    font-size: 0.9rem;
-}
-
-/* התאמה למסכים קטנים (Responsive) */
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 1.5rem;
-    }
-    
-    .form-container {
-        padding: 20px;
-    }
+    background-color: var(--denim-blue); /* אותו כחול של ההדר */
+    color: var(--pure-white); /* לבן נקי */
+    padding: 1.5rem;
+    text-align: center; /* מרכז את הטקסט */
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: auto; /* דוחף את הפוטר לתחתית הדף */
+    border-top: 4px solid var(--nautical-red); /* פס אדום דק לאחידות */
 }
