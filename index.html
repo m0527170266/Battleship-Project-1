@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>צוללות - דף הבית</title>
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="icon" href="favicon.ico.ico">
+</head>
+<body>
+
+    <header>
+        <h1>משחק צוללות</h1>
+    </header>
+
+    <main id="main-content">
+        <section class="form-container">
+            <form id="login-form">
+                <h2>התחברות למערכת</h2>
+                
+                <div class="input-group">
+                    <label for="player-name">שם שחקן:</label>
+                    <input type="text" id="player-name" required minlength="2" placeholder="הקש שם...">
+                </div>
+
+                <div class="input-group">
+                    <label for="difficulty">בחר רמת קושי:</label>
+                    <select id="difficulty" required>
+                        <option value="" disabled selected>בחר רמה</option>
+                        <option value="easy">קל (לוח קטן)</option>
+                        <option value="hard">קשה (לוח גדול + זמן)</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="start-game-btn">התחל משחק</button>
+            </form>
+        </section>
+
+        <nav class="home-nav">
+            <a href="page/instructions.html">הוראות המשחק</a>
+            <a href="page/leaderboard.html">טבלת שיאים</a>
+        </nav>
+    </main>
+
+    <footer>
+        <p> js סמינר מאיר - פרויקט</p>
+    </footer>
+
+    <script type="module" src="script/main.js"></script>
+</body>
+</html>
