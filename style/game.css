@@ -1,0 +1,57 @@
+/* style/game.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+    /* עדכון הרקע כדי שיכיל את כל התמונה בלי לחתוך */
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), 
+                      url('../image/game-bg.jpg');
+    
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* שימוש ב-100% כדי שכל התמונה תיכנס לגובה ולרוחב המסך */
+    background-size: 100% 100%; 
+    
+    /* מבטיח שהרקע לא יזוז כשגוללים */
+    background-attachment: fixed;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #1a3c5a; /* הכחול של סמינר מאיר */
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+#exit-btn {
+    margin-top: 30px;
+    padding: 12px 25px;
+    background-color: #ef4444; /* אדום בולט ליציאה */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+#exit-btn:hover {
+    background-color: #dc2626; /* אדום כהה יותר במעבר עכבר */
+    transform: translateY(-2px); /* קפיצה קלה למעלה */
+}
+
+#exit-btn:active {
+    transform: translateY(0); /* לחיצה */
+}
