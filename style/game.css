@@ -5,17 +5,12 @@ body {
     padding: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     
-    /* עדכון הרקע כדי שיכיל את כל התמונה בלי לחתוך */
-    background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), 
+    /* רקע התמונה המקורי */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
                       url('../image/game-bg.jpg');
-    
     background-repeat: no-repeat;
     background-position: center;
-    
-    /* שימוש ב-100% כדי שכל התמונה תיכנס לגובה ולרוחב המסך */
     background-size: 100% 100%; 
-    
-    /* מבטיח שהרקע לא יזוז כשגוללים */
     background-attachment: fixed;
 
     display: flex;
@@ -25,7 +20,7 @@ body {
 }
 
 header {
-    background-color: #1a3c5a; /* הכחול של סמינר מאיר */
+    background-color: #1a3c5a;
     color: white;
     width: 100%;
     text-align: center;
@@ -33,25 +28,72 @@ header {
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
+/* שורת הסטטוס - טקסט צף במרכז ללא רקע */
+#status-bar {
+    background-color: transparent; /* ללא רקע */
+    border: none;                  /* ללא מסגרת */
+    color: white;
+    padding: 10px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;       /* מרכוז הטקסט באמצע */
+    gap: 40px;                     /* רווח בין השם לניסיונות */
+    width: 100%;
+    
+    /* צל לטקסט כדי שיהיה בולט על הרקע הבהיר */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9), 
+                 0 0 10px rgba(0, 0, 0, 0.6);
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+/* לוח המשחק - שקוף ומשולב בים */
+#board {
+    display: grid;
+    gap: 4px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    margin: 0 auto 20px auto;
+    backdrop-filter: blur(2px); /* טשטוש עדין מאחורי הלוח */
+}
+
+/* המשבצות - שקופות וכהות (אפקט של צל) */
+.cell {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0, 0, 0, 0.45); 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cell:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* מצבי משחק */
+.cell.miss { background-color: rgba(255, 255, 255, 0.2); }
+.cell.hit { background-color: rgba(239, 68, 68, 0.7); }
+
+/* כפתור היציאה - למטה ובאמצע */
 #exit-btn {
-    margin-top: 30px;
-    padding: 12px 25px;
-    background-color: #ef4444; /* אדום בולט ליציאה */
+    display: block;
+    margin: 20px auto 40px auto;
+    padding: 12px 35px;
+    background-color: #ef4444;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 }
 
 #exit-btn:hover {
-    background-color: #dc2626; /* אדום כהה יותר במעבר עכבר */
-    transform: translateY(-2px); /* קפיצה קלה למעלה */
-}
-
-#exit-btn:active {
-    transform: translateY(0); /* לחיצה */
+    background-color: #dc2626;
+    transform: translateY(-2px);
 }
