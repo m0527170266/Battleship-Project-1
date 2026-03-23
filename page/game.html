@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>צוללות - המשחק</title>
+    
+    <link rel="stylesheet" href="../style/game.css">
+    <link rel="icon" href="../favicon.ico.ico">
+</head>
+<body>
+
+    <header>
+        <h1>צוללות בקרב</h1>
+    </header>
+
+    <main class="game-container">
+        <div id="status-bar">
+            <p>שחקן: <span id="current-player-name">---</span></p>
+            <p id="current-score">ניסיונות: 0</p>
+            <p id="timer-display" style="display:none;">זמן נותר: <span id="time-left">--</span></p>
+        </div>
+
+        <div id="board"></div>
+
+        <button id="exit-btn" type="button" onclick="window.location.href='../index.html'">יציאה לתפריט הראשי</button>
+    </main>
+
+    <div id="win-modal" style="display:none;">
+        <div class="modal-content">
+            <h2 id="winner-message">ניצחת!</h2>
+            <p id="final-stats"></p>
+            <div id="trophy-container">
+                <img src="../image/גביע.png" alt="גביע ניצחון" style="width:150px;">
+            </div>
+            <button id="play-again-btn" onclick="location.reload()">משחק חדש</button>
+            <button id="go-to-leaderboard" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
+        </div>
+    </div>
+
+    <script src="../script/game.js"></script>
+</body>
+</html>
