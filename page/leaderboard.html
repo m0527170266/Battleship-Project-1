@@ -6,8 +6,7 @@
     <title>טבלת שיאים - צוללות</title>
     <link rel="stylesheet" href="../style/main.css">
     <link rel="stylesheet" href="../style/leaderboard.css">
-            <link rel="icon" href="../favicon.ico.ico">
-
+    <link rel="icon" href="../favicon.ico.ico">
 </head>
 <body>
 
@@ -17,6 +16,14 @@
 
     <main>
         <section class="form-container" style="max-width: 600px;">
+            
+            <div id="top-winner-section" style="display: none; text-align: center; margin-bottom: 25px;">
+                <span style="font-size: 60px;">🏆</span>
+                <h2 id="top-player-name" style="color: #ef4444; margin: 10px 0; font-size: 2.2rem; font-weight: bold;"></h2>
+                <p style="font-size: 1.2rem; font-weight: bold; color: #1a3c5a;">במקום הראשון!</p>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+            </div>
+
             <h2 style="display: flex; align-items: center; justify-content: center; gap: 15px;">
                 הצוללנים המצטיינים
             </h2>
@@ -26,7 +33,7 @@
                     <tr>
                         <th>דירוג</th>
                         <th>שם שחקן</th>
-                        <th>ניקוד</th>
+                        <th>ניסיונות</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboard-body">
@@ -39,7 +46,7 @@
             </table>
 
             <div style="margin-top: 30px; text-align: center;">
-                <button id="back-btn">חזרה לתפריט הראשי</button>
+                <button id="back-btn" class="btn-clean">חזרה לתפריט הראשי</button>
             </div>
         </section>
     </main>
@@ -48,10 +55,6 @@
         <p>סמינר מאיר - פרויקט JS</p>
     </footer>
 
-    <script>
-        document.getElementById('back-btn').addEventListener('click', () => {
-            window.location.href = '../index.html';
-        });
-    </script>
+    <script src="../script/leaderboard.js"></script>
 </body>
 </html>
