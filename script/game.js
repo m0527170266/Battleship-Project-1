@@ -1,9 +1,9 @@
 /**
  * @file game.js
- * @description ניהול המשחק - אתחול נתונים ויצירת לוח דינמי
+ * @description ניהול לוגיקת המשחק, יצירת לוח דינמי וטיפול בניצחון.
  */
 
-// 1. אובייקט ליטרלי לריכוז נתוני המשחק (דרישה חובה) 
+/** @type {Object} אובייקט הגדרות המשחק */
 const gameSettings = {
     playerName: "אורח",
     level: "easy",
@@ -12,72 +12,124 @@ const gameSettings = {
     hits: 0
 };
 
+/** @type {number[]} מערך מיקומי הצוללות הסודיות */
+let shipLocations = [];
+
 /**
- * 2. פונקציית חץ ליצירת לוח המשחק בתוך ה-DOM [cite: 234, 307]
+ * מגרילה מיקומים לצוללות על פי רמת הקושי.
+ * @returns {void}
+ */
+const placeShips = () => {
+    shipLocations = [];
+    const shipsToPlace = (gameSettings.level === 'hard') ? 10 : 5;
+    
+    while (shipLocations.length < shipsToPlace) {
+        const randomPos = Math.floor(Math.random() * (gameSettings.gridSize * gameSettings.gridSize));
+        if (!shipLocations.includes(randomPos)) {
+            shipLocations.push(randomPos);
+        }
+    }
+    console.log("מיקומי הצוללות:", shipLocations); 
+};
+
+/**
+ * יוצרת את לוח המשחק בתוך ה-DOM.
+ * @returns {void}
  */
 const createBoard = () => {
     const boardElement = document.querySelector('#board');
     if (!boardElement) return;
 
-    // ניקוי הלוח למניעת כפילויות
     boardElement.innerHTML = "";
-
-    // הגדרת מבנה ה-Grid לפי גודל הלוח שנקבע [cite: 246]
     boardElement.style.display = "grid";
-    boardElement.style.gridTemplateColumns = `repeat(${gameSettings.gridSize}, 45px)`;
+    boardElement.style.gridTemplateColumns = `repeat(${gameSettings.gridSize}, 48px)`;
 
-    // לולאה ליצירת המשבצות 
     for (let i = 0; i < gameSettings.gridSize * gameSettings.gridSize; i++) {
         const cell = document.createElement('div');
-        
-        cell.classList.add('cell'); // הוספת קלאס CSS [cite: 249]
-        cell.dataset.index = i;      // שמירת אינדקס המשבצת [cite: 252]
-
-        // הוספת אירוע לחיצה לכל משבצת [cite: 308]
+        cell.classList.add('cell');
+        cell.dataset.index = i;
         cell.addEventListener('click', () => handleCellClick(cell));
-
         boardElement.appendChild(cell);
     }
 };
 
 /**
- * 3. פונקציית חץ לאתחול נתוני המשחק בטעינה 
+ * מטפלת בלחיצה על משבצת בלוח.
+ * @param {HTMLElement} cell - האלמנט שעליו נלחץ.
  */
-const initGame = () => {
-    // שליפת שם השחקן מה-localStorage [cite: 319]
-    const savedData = JSON.parse(localStorage.getItem('battleship_player'));
-    if (savedData && savedData.name) {
-        gameSettings.playerName = savedData.name;
-        document.querySelector('#current-player-name').textContent = gameSettings.playerName;
+const handleCellClick = (cell) => {
+    if (cell.classList.contains('hit') || cell.classList.contains('miss')) return;
+
+    const clickedIndex = parseInt(cell.dataset.index);
+    gameSettings.attempts++;
+    
+    const scoreElement = document.querySelector('#current-score');
+    if (scoreElement) scoreElement.textContent = `ניסיונות: ${gameSettings.attempts}`;
+
+    if (shipLocations.includes(clickedIndex)) {
+        cell.classList.add('hit');
+        gameSettings.hits++;
+        
+        if (gameSettings.hits === shipLocations.length) {
+            setTimeout(handleWin, 500); 
+        }
+    } else {
+        cell.classList.add('miss');
     }
-
-    // שליפת רמת הקושי מה-URL [cite: 320]
-    const urlParams = new URLSearchParams(window.location.search);
-    gameSettings.level = urlParams.get('level') || 'easy';
-
-    // קביעת גודל הלוח: 6 לרמה קלה, 10 לרמה קשה [cite: 326]
-    gameSettings.gridSize = (gameSettings.level === 'hard') ? 10 : 6;
-
-    // קריאה ליצירת הלוח
-    createBoard();
-
-    console.log(`משחק התחיל: ${gameSettings.playerName}, רמה: ${gameSettings.level}`);
 };
 
 /**
- * 4. טיפול בלחיצה על משבצת (לוגיקה בסיסית לשלב 2)
+ * מנהלת את תהליך הניצחון ומציגה את המודל המרכזי.
+ * @returns {void}
  */
-const handleCellClick = (cell) => {
-    // מניעת לחיצה חוזרת
-    if (cell.classList.contains('hit') || cell.classList.contains('miss')) return;
+const handleWin = () => {
+    const overlay = document.querySelector('#game-win-overlay');
+    const statsText = document.querySelector('#win-stats');
+    const nextBtn = document.querySelector('#btn-next-level');
 
-    // עדכון ניסיונות באובייקט ובתצוגה [cite: 314]
-    gameSettings.attempts++;
-    document.querySelector('#current-score').textContent = `ניסיונות: ${gameSettings.attempts}`;
-    
-    // סימון זמני לבדיקה
-    cell.classList.add('miss'); 
+    if (statsText) {
+        statsText.innerHTML = `כל הכבוד <b>${gameSettings.playerName}</b>!<br>סיימת ב-${gameSettings.attempts} ניסיונות.`;
+    }
+
+    if (overlay) overlay.style.display = 'flex';
+
+    if (nextBtn) {
+        nextBtn.onclick = () => {
+            const nextLevel = gameSettings.level === 'easy' ? 'hard' : 'hard';
+            window.location.href = `game.html?level=${nextLevel}`;
+        };
+    }
+
+    // שמירת תוצאה
+    const scoreData = {
+        name: gameSettings.playerName,
+        attempts: gameSettings.attempts,
+        level: gameSettings.level,
+        date: new Date().toLocaleDateString()
+    };
+    let scores = JSON.parse(localStorage.getItem('battleship_highscores')) || [];
+    scores.push(scoreData);
+    localStorage.setItem('battleship_highscores', JSON.stringify(scores));
 };
 
-// הפעלת האתחול כשהדף מוכן [cite: 308]
+/**
+ * מאתחלת את המשחק בטעינה.
+ * @returns {void}
+ */
+const initGame = () => {
+    const savedData = JSON.parse(localStorage.getItem('battleship_player'));
+    if (savedData && savedData.name) {
+        gameSettings.playerName = savedData.name;
+        const nameDisplay = document.querySelector('#current-player-name');
+        if (nameDisplay) nameDisplay.textContent = gameSettings.playerName;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    gameSettings.level = urlParams.get('level') || 'easy';
+    gameSettings.gridSize = (gameSettings.level === 'hard') ? 10 : 6;
+
+    placeShips();
+    createBoard();
+};
+
 window.addEventListener('DOMContentLoaded', initGame);

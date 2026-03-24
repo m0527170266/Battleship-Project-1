@@ -38,6 +38,19 @@
         </div>
     </div>
 
+    <div id="game-win-overlay" class="custom-modal">
+    <div class="modal-card">
+        <h2 id="win-title">ניצחון!</h2>
+        <p id="win-stats"></p>
+        
+        <div class="modal-actions">
+            <button class="btn-clean" onclick="location.reload()">משחק חדש</button>
+            <button class="btn-clean" id="btn-next-level">שלב הבא</button>
+            <button class="btn-clean" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
+        </div>
+    </div>
+</div>
+
     <script src="../script/game.js"></script>
 </body>
 </html>

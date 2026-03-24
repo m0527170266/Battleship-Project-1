@@ -97,3 +97,59 @@ header {
     background-color: #dc2626;
     transform: translateY(-2px);
 }
+
+/* השכבה שמכסה את המסך */
+#game-win-overlay {
+    display: none; /* מוסתר בהתחלה */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85); /* רקע כהה מאוד */
+    z-index: 99999; /* מספר גבוה מאוד כדי שיהיה מעל הכל */
+    justify-content: center;
+    align-items: center;
+}
+
+/* הכרטיס הלבן/כחול שקופץ באמצע */
+.modal-card {
+    background: #0a1f36;
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    min-width: 400px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+}
+
+#win-title {
+    font-size: 3rem;
+    color: #38bdf8;
+    margin: 0 0 20px 0;
+}
+
+/* הכפתורים הנקיים שביקשת */
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.btn-clean {
+    background: none !important;
+    border: none !important;
+    color: white !important;
+    font-size: 1.5rem !important;
+    font-weight: bold !important;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    outline: none;
+}
+
+/* אפקט מעבר עכבר - אדום בלבד בלי מסגרת */
+.btn-clean:hover {
+    color: #ef4444 !important;
+    background: none !important;
+}
