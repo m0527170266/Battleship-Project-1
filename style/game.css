@@ -98,29 +98,26 @@ header {
     transform: translateY(-2px);
 }
 
-/* השכבה שמכסה את המסך */
 #game-win-overlay {
-    display: none; /* מוסתר בהתחלה */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.85); /* רקע כהה מאוד */
-    z-index: 99999; /* מספר גבוה מאוד כדי שיהיה מעל הכל */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    z-index: 999999 !important; /* מספר ענק כדי שיהיה מעל הכל */
+    display: none; 
     justify-content: center;
     align-items: center;
 }
 
-/* הכרטיס הלבן/כחול שקופץ באמצע */
 .modal-card {
     background: #0a1f36;
     padding: 50px;
     border-radius: 20px;
-    text-align: center;
+    border: 3px solid #38bdf8;
     color: white;
-    min-width: 400px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+    text-align: center;
 }
 
 #win-title {
@@ -168,4 +165,39 @@ header {
     background-repeat: no-repeat;
     background-position: center;
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+#fleet-status-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#fleet-visual {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.ship-indicator {
+    display: flex;
+    flex-direction: row; /* הצגת הריבועים בשורה */
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+
+.indicator-square {
+    width: 15px;
+    height: 15px;
+    margin: 1px;
+    border-radius: 2px;
+}
+
+.indicator-square.alive {
+    background-color: #ff4d4d; /* אדום לצוללת חיה */
+}
+
+.indicator-square.sunk {
+    background-color: #555; /* אפור לצוללת שהוטבעה */
+    opacity: 0.5;
 }

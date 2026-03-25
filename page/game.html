@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>צוללות - המשחק</title>
-    
     <link rel="stylesheet" href="../style/game.css">
     <link rel="icon" href="../favicon.ico.ico">
 </head>
@@ -26,30 +25,22 @@
         <button id="exit-btn" type="button" onclick="window.location.href='../index.html'">יציאה לתפריט הראשי</button>
     </main>
 
-    <div id="win-modal" style="display:none;">
-        <div class="modal-content">
-            <h2 id="winner-message">ניצחת!</h2>
-            <p id="final-stats"></p>
+    <div id="game-win-overlay" class="custom-modal" style="display: none;">
+        <div class="modal-card">
+            <h2 id="win-title">ניצחון!</h2>
+            <p id="win-stats"></p>
+            
             <div id="trophy-container">
-                <img src="../image/גביע.png" alt="גביע ניצחון" style="width:150px;">
-            </div>
-            <button id="play-again-btn" onclick="location.reload()">משחק חדש</button>
-            <button id="go-to-leaderboard" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
-        </div>
-    </div>
-
-    <div id="game-win-overlay" class="custom-modal">
-    <div class="modal-card">
-        <h2 id="win-title">ניצחון!</h2>
-        <p id="win-stats"></p>
-        
-        <div class="modal-actions">
-            <button class="btn-clean" onclick="location.reload()">משחק חדש</button>
-            <button class="btn-clean" id="btn-next-level">שלב הבא</button>
-            <button class="btn-clean" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
-        </div>
-    </div>
+    <img src="../image/גביע-שקוף.jpg" alt="גביע ניצחון" style="width:150px; margin: 20px 0;">
 </div>
+
+            <div class="modal-actions">
+                <button class="btn-clean" onclick="location.reload()">משחק חדש</button>
+                <button class="btn-clean" id="btn-next-level">שלב הבא</button>
+                <button class="btn-clean" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../script/game.js"></script>
 </body>
