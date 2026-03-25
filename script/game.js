@@ -1,34 +1,28 @@
 /**
  * @file game.js
- * @description ניהול לוגיקת משחק הצוללות: הגרלת מיקומים, אפקטים קוליים, תצוגת פגיעות וניהול תורות.
- * כולל שימוש ב-LocalStorage לשמירת נתונים ו-URLSearchParams לניהול רמות קושי.
+ * @description ניהול 6 רמות משחק, טיימר, אפקטים קוליים ותורות.
+ * עודכן ללוגיקת צוללות ארוכות (שלבים 1+2).
  */
 
-/** * @type {Object} 
- * @property {string} playerName - שם השחקן הנוכחי.
- * @property {string} level - רמת הקושי (easy/hard).
- * @property {number} gridSize - גודל הלוח (6 או 10).
- * @property {number} attempts - מספר הניסיונות שבוצעו.
- * @property {number} hits - מספר הפגיעות המוצלחות.
- * @property {boolean} isComputerTurn - האם כרגע תור המחשב (חוסם לחיצות שחקן).
- */
+/** * @type {Object} הגדרות המשחק - שימוש באובייקט ליטרלי לפי הדרישות */
 const gameSettings = {
     playerName: "אורח",
-    level: "easy",
+    currentLevel: 1,
+    maxLevels: 6,
     gridSize: 6,
     attempts: 0,
     hits: 0,
-    isComputerTurn: false 
+    isComputerTurn: false,
+    timerInterval: null,
+    timeLeft: 60
 };
 
-/** * @type {number[]} 
- * מערך המכיל את האינדקסים של המשבצות בהן מוחבאות צוללות.
+/** * @type {Array<{locations: number[], hits: number, size: number, sunk: boolean}>} 
+ * מערך אובייקטים המייצג את הצי - שלב 1: מבנה נתונים מורכב
  */
-let shipLocations = [];
+let ships = [];
 
-/** * אובייקט המכיל את קבצי האודיו של המשחק.
- * נתיבים מותאמים לתיקיית SOUND.
- */
+/** * אובייקט סאונד */
 const gameSounds = {
     fire: new Audio('../sound/fire.mp3.wav'),
     hit: new Audio('../sound/explosion.mp3.mp3'),
@@ -36,137 +30,221 @@ const gameSounds = {
 };
 
 /**
- * מפעילה אפקט קולי.
- * @param {HTMLAudioElement} audio - אובייקט הסאונד להשמעה.
+ * פונקציית עזר להפעלת סאונד (Arrow Function)
+ * @param {HTMLAudioElement} audio 
  */
 const playEffect = (audio) => {
-    audio.currentTime = 0; // אתחול הזמן כדי לאפשר השמעה רציפה בלחיצות מהירות
-    audio.play().catch(() => console.log("Sound playback was blocked by browser."));
+    audio.currentTime = 0;
+    audio.play().catch(() => console.log("Sound blocked by browser"));
 };
 
 /**
- * מגרילה מיקומים לצוללות על פי רמת הקושי הנוכחית.
- * רמה קלה: 5 צוללות. רמה קשה: 10 צוללות.
+ * מנהלת את הטיימר - פועל רק מרמה 3 ומעלה
+ */
+const startTimer = () => {
+    clearInterval(gameSettings.timerInterval);
+    const timerArea = document.querySelector('#timer-display');
+    const timerText = document.querySelector('#time-left');
+
+    if (gameSettings.currentLevel >= 3) {
+        timerArea.style.display = 'block';
+        gameSettings.timeLeft = 60 - ((gameSettings.currentLevel - 3) * 10);
+        timerText.textContent = gameSettings.timeLeft;
+
+        gameSettings.timerInterval = setInterval(() => {
+            gameSettings.timeLeft--;
+            timerText.textContent = gameSettings.timeLeft;
+
+            if (gameSettings.timeLeft <= 0) {
+                clearInterval(gameSettings.timerInterval);
+                showLevelFailure();
+            }
+        }, 1000);
+    } else {
+        timerArea.style.display = 'none';
+    }
+};
+
+/**
+ * שלב 2: פונקציית עזר לבדיקה אם מיקום פנוי וחוקי להצבת צוללת
+ * שימוש ב-some ו-includes (HOF) לפי הדרישות
+ * @param {number} startIndex 
+ * @param {number} size 
+ * @param {boolean} isHorizontal 
+ * @returns {boolean}
+ */
+const canPlaceShip = (startIndex, size, isHorizontal) => {
+    const { gridSize } = gameSettings;
+    const row = Math.floor(startIndex / gridSize);
+
+    for (let i = 0; i < size; i++) {
+        let currentIndex = isHorizontal ? startIndex + i : startIndex + (i * gridSize);
+        const currentRow = Math.floor(currentIndex / gridSize);
+
+        // בדיקה שלא חורג מהשורה (באופקי) או מהלוח
+        if (isHorizontal && currentRow !== row) return false;
+        if (currentIndex >= gridSize * gridSize) return false;
+
+        // בדיקה שהמשבצת לא תפוסה כבר
+        if (ships.some(ship => ship.locations.includes(currentIndex))) return false;
+    }
+    return true;
+};
+
+/**
+ * שלב 2: הגרלת צוללות ארוכות (גדלים 2-5)
+ * שימוש ב-forEach לפי הדרישות
  */
 const placeShips = () => {
-    shipLocations = [];
-    const shipsToPlace = (gameSettings.level === 'hard') ? 10 : 5;
+    ships = []; 
+    const fleet = gameSettings.currentLevel === 1 ? [3, 2, 2] : [5, 4, 3, 3, 2];
     
-    while (shipLocations.length < shipsToPlace) {
-        const randomPos = Math.floor(Math.random() * (gameSettings.gridSize * gameSettings.gridSize));
-        if (!shipLocations.includes(randomPos)) {
-            shipLocations.push(randomPos);
+    fleet.forEach(size => {
+        let placed = false;
+        while (!placed) {
+            const isHorizontal = Math.random() < 0.5;
+            const startIndex = Math.floor(Math.random() * (gameSettings.gridSize * gameSettings.gridSize));
+
+            if (canPlaceShip(startIndex, size, isHorizontal)) {
+                const locations = [];
+                for (let i = 0; i < size; i++) {
+                    locations.push(isHorizontal ? startIndex + i : startIndex + (i * gameSettings.gridSize));
+                }
+                ships.push({ locations, hits: 0, size, sunk: false });
+                placed = true;
+            }
         }
-    }
-    console.log("Secret Ship Locations:", shipLocations); 
+    });
+    console.log("הצי הוצב:", ships);
 };
 
 /**
- * יוצרת את לוח המשחק ב-DOM באופן דינמי.
- * מגדירה את מבנה הגריד (Grid) ומוסיפה מאזיני אירועים לכל משבצת.
+ * יצירת לוח המשחק דרך ה-DOM (createElement)
  */
 const createBoard = () => {
-    const boardElement = document.querySelector('#board');
-    if (!boardElement) return;
+    const board = document.querySelector('#board');
+    if (!board) return;
 
-    boardElement.innerHTML = "";
-    boardElement.style.display = "grid";
-    boardElement.style.gridTemplateColumns = `repeat(${gameSettings.gridSize}, 48px)`;
+    board.innerHTML = "";
+    board.style.display = "grid";
+    board.style.gridTemplateColumns = `repeat(${gameSettings.gridSize}, 48px)`;
 
     for (let i = 0; i < gameSettings.gridSize * gameSettings.gridSize; i++) {
         const cell = document.createElement('div');
         cell.classList.add('cell');
         cell.dataset.index = i;
         cell.addEventListener('click', () => handleCellClick(cell));
-        boardElement.appendChild(cell);
+        board.appendChild(cell);
     }
 };
 
 /**
- * מטפלת באירוע לחיצה על משבצת בלוח.
- * מבצעת בדיקת פגיעה/החטאה, מעדכנת תצוגה, משמיעה סאונד ומנהלת תורות.
- * @param {HTMLElement} cell - אלמנט המשבצת שנלחץ.
+ * טיפול בלחיצה על משבצת
+ * שימוש ב-find (HOF) כדי לזהות צוללת
  */
 const handleCellClick = (cell) => {
     if (gameSettings.isComputerTurn || cell.classList.contains('hit') || cell.classList.contains('miss')) return;
 
     const clickedIndex = parseInt(cell.dataset.index);
     gameSettings.attempts++;
-    
-    const scoreElement = document.querySelector('#current-score');
-    if (scoreElement) scoreElement.textContent = `ניסיונות: ${gameSettings.attempts}`;
+    document.querySelector('#current-score').textContent = `ניסיונות: ${gameSettings.attempts}`;
 
-    if (shipLocations.includes(clickedIndex)) {
-        // פגיעה: משמיעים ירייה ואז פיצוץ
-        playEffect(gameSounds.fire); 
-        cell.classList.add('hit'); 
+    // חיפוש הצוללת שנפגעה
+    const hitShip = ships.find(ship => ship.locations.includes(clickedIndex));
+
+    if (hitShip) {
+        playEffect(gameSounds.fire);
+        cell.classList.add('hit');
+        setTimeout(() => playEffect(gameSounds.hit), 200);
         
-        // השהייה קלה כדי לשמוע את הפיצוץ אחרי הירייה
-        setTimeout(() => {
-            playEffect(gameSounds.hit);
-        }, 200);
-
         gameSettings.hits++;
         
-        if (gameSettings.hits === shipLocations.length) {
-            setTimeout(handleWin, 500); 
+        // בדיקת ניצחון (סך כל הפגיעות מול סך כל גדלי הצוללות)
+        const totalShipCells = ships.reduce((sum, s) => sum + s.size, 0);
+        if (gameSettings.hits === totalShipCells) {
+            clearInterval(gameSettings.timerInterval);
+            setTimeout(handleWin, 500);
         }
     } else {
-        // החטאה: משמיעים רק את צליל ההחטאה
-        cell.classList.add('miss'); 
+        cell.classList.add('miss');
         playEffect(gameSounds.miss);
         startComputerTurn();
     }
 };
 
 /**
- * מדמה את תור המחשב על ידי חסימת הלוח לזמן מוגדר.
- * בסיום ההמתנה, השליטה חוזרת לשחקן.
+ * הודעת כישלון בזמן
+ */
+const showLevelFailure = () => {
+    const overlay = document.querySelector('#game-win-overlay');
+    const title = document.querySelector('#win-title');
+    const stats = document.querySelector('#win-stats');
+    const nextBtn = document.querySelector('#btn-next-level');
+
+    title.textContent = "נגמר הזמן!";
+    stats.innerHTML = `לא הצלחת לסיים את שלב ${gameSettings.currentLevel}.`;
+    nextBtn.textContent = "נסה שוב";
+    overlay.style.display = 'flex';
+
+    nextBtn.onclick = () => {
+        overlay.style.display = 'none';
+        resetLevel();
+    };
+};
+
+const resetLevel = () => {
+    gameSettings.attempts = 0;
+    gameSettings.hits = 0;
+    placeShips();
+    createBoard();
+    startTimer();
+};
+
+/**
+ * תור מחשב (חסימת לוח)
  */
 const startComputerTurn = () => {
     gameSettings.isComputerTurn = true;
     const board = document.querySelector('#board');
-    if (board) board.style.opacity = "0.5"; 
-
+    board.style.opacity = "0.5";
     setTimeout(() => {
         gameSettings.isComputerTurn = false;
-        if (board) board.style.opacity = "1";
-    }, 1500); 
+        board.style.opacity = "1";
+    }, 1200);
 };
 
 /**
- * מנהלת את סיום המשחק במצב ניצחון.
- * מציגה את מודל הניצחון, מעדכנת סטטיסטיקות ושומרת ב-LocalStorage.
+ * ניהול הניצחון
  */
 const handleWin = () => {
     const overlay = document.querySelector('#game-win-overlay');
-    const statsText = document.querySelector('#win-stats');
+    const title = document.querySelector('#win-title');
+    const stats = document.querySelector('#win-stats');
     const nextBtn = document.querySelector('#btn-next-level');
 
-    if (statsText) {
-        statsText.innerHTML = `כל הכבוד <b>${gameSettings.playerName}</b>!<br>סיימת ב-${gameSettings.attempts} ניסיונות.`;
-    }
+    title.textContent = "ניצחון!";
+    stats.textContent = `שלב ${gameSettings.currentLevel} הושלם ב-${gameSettings.attempts} ניסיונות!`;
+    overlay.style.display = 'flex';
 
-    if (overlay) overlay.style.display = 'flex';
-
-    if (nextBtn) {
-        nextBtn.onclick = () => {
-            const nextLevel = gameSettings.level === 'easy' ? 'hard' : 'hard';
-            window.location.href = `game.html?level=${nextLevel}`;
-        };
-    }
-
+    nextBtn.onclick = () => {
+        if (gameSettings.currentLevel < gameSettings.maxLevels) {
+            gameSettings.currentLevel++;
+            gameSettings.gridSize = 10; // הגדלת לוח מרמה 2
+            overlay.style.display = 'none';
+            resetLevel();
+        } else {
+            alert("ניצחת את כל המשחק!");
+            window.location.href = 'leaderboard.html';
+        }
+    };
     saveScore();
 };
 
-/**
- * שומרת את תוצאת המשחק הנוכחי בטבלת השיאים ב-LocalStorage.
- */
 const saveScore = () => {
     const scoreData = {
         name: gameSettings.playerName,
         attempts: gameSettings.attempts,
-        level: gameSettings.level,
+        level: gameSettings.currentLevel,
         date: new Date().toLocaleDateString()
     };
     let scores = JSON.parse(localStorage.getItem('battleship_highscores')) || [];
@@ -174,23 +252,13 @@ const saveScore = () => {
     localStorage.setItem('battleship_highscores', JSON.stringify(scores));
 };
 
-/**
- * מאתחלת את המשחק: טוענת נתוני שחקן, מגדירה רמת קושי ויוצרת לוח.
- */
 const initGame = () => {
-    const savedData = JSON.parse(localStorage.getItem('battleship_player'));
-    if (savedData && savedData.name) {
-        gameSettings.playerName = savedData.name;
-        const nameDisplay = document.querySelector('#current-player-name');
-        if (nameDisplay) nameDisplay.textContent = gameSettings.playerName;
+    const data = JSON.parse(localStorage.getItem('battleship_player'));
+    if (data) {
+        gameSettings.playerName = data.name;
+        document.querySelector('#current-player-name').textContent = data.name;
     }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    gameSettings.level = urlParams.get('level') || 'easy';
-    gameSettings.gridSize = (gameSettings.level === 'hard') ? 10 : 6;
-
-    placeShips();
-    createBoard();
+    resetLevel();
 };
 
 window.addEventListener('DOMContentLoaded', initGame);
