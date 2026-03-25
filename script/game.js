@@ -166,6 +166,7 @@ const handleCellClick = (cell) => {
             hitShip.sunk = true;
             playEffect(gameSounds.hit);
             markSurroundingCells(hitShip); // קריאה לפונקציה המתוקנת
+            updateFleetStatus();
         }
     } else {
         cell.classList.add('miss');
@@ -175,28 +176,47 @@ const handleCellClick = (cell) => {
 };
 
 /**
- * מסמנת משבצות מסביב לצוללת שהוטבעה (תיקון: בדיקה שאין צוללת אחרת במשבצת).
+ * פונקציה סופית לחשיפת צוללת - מתוקנת לפי כיוון התמונה (דרישה 83).
  */
 const markSurroundingCells = (ship) => {
     const { gridSize } = gameSettings;
     const allCells = document.querySelectorAll('.cell');
+    
+    // מיון המיקומים כדי לוודא שאנחנו עובדים משמאל לימין / מלמעלה למטה
+    const sortedLocations = [...ship.locations].sort((a, b) => a - b);
+    const isHorizontal = sortedLocations.length > 1 && (sortedLocations[1] - sortedLocations[0] === 1);
 
+    sortedLocations.forEach((index, i) => {
+        const cell = allCells[index];
+        cell.classList.add('revealed-ship');
+
+        /**
+         * אם i=0 (המשבצת הראשונה), אנחנו רוצים להראות את סוף התמונה (100%).
+         * אם i=אחרון, אנחנו רוצים להראות את תחילת התמונה (0%).
+         * זה יגרום לראש ולזנב להתחלף במקומות כפי שביקשת.
+         */
+        const positionPercent = ((ship.size - 1 - i) / (ship.size - 1)) * 100;
+
+        if (isHorizontal) {
+            cell.style.backgroundSize = `${ship.size * 100}% 100%`;
+            cell.style.backgroundPosition = `${positionPercent}% 0%`;
+        } else {
+            cell.style.backgroundSize = `100% ${ship.size * 100}%`;
+            cell.style.backgroundPosition = `0% ${positionPercent}%`;
+        }
+    });
+
+    // סימון איקסים מסביב (לוגיקה שעובדת)
     ship.locations.forEach(index => {
         const row = Math.floor(index / gridSize);
         const col = index % gridSize;
-
         for (let r = row - 1; r <= row + 1; r++) {
             for (let c = col - 1; c <= col + 1; c++) {
                 if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
                     const neighborIndex = r * gridSize + c;
                     const neighborCell = allCells[neighborIndex];
-                    
-                    // בדיקה קריטית: האם המשבצת הזו שייכת לצוללת כלשהי אחרת?
                     const isAnyShipThere = ships.some(s => s.locations.includes(neighborIndex));
-
-                    if (!isAnyShipThere && 
-                        !neighborCell.classList.contains('hit') && 
-                        !neighborCell.classList.contains('miss')) {
+                    if (!isAnyShipThere && !neighborCell.classList.contains('hit') && !neighborCell.classList.contains('miss')) {
                         neighborCell.classList.add('miss');
                     }
                 }
@@ -204,6 +224,7 @@ const markSurroundingCells = (ship) => {
         }
     });
 };
+
 
 /**
  * מציגה מסך כישלון.
@@ -241,6 +262,7 @@ const resetLevel = () => {
     placeShips();
     createBoard();
     startTimer();
+    updateFleetStatus();
 };
 
 /**
@@ -321,6 +343,38 @@ const initGame = () => {
     }
     
     resetLevel(); 
+};
+
+/**
+ * מעדכנת את התצוגה הויזואלית של הצי שנותר להטביע (דרישה 18).
+ */
+const updateFleetStatus = () => {
+    const fleetVisual = document.querySelector('#fleet-visual');
+    if (!fleetVisual) return;
+
+    // ניקוי התצוגה הקודמת
+    fleetVisual.innerHTML = '';
+
+    // מעבר על כל הצוללות ויצירת אינדיקטור לכל אחת
+    ships.forEach(ship => {
+        const shipDiv = document.createElement('div');
+        shipDiv.classList.add('ship-indicator');
+
+        // יצירת ריבועים לפי גודל הצוללת
+        for (let i = 0; i < ship.size; i++) {
+            const square = document.createElement('div');
+            square.classList.add('indicator-square');
+            
+            // אם הצוללת הוטבעה - צבע אפור, אם חיה - צבע אדום
+            if (ship.sunk) {
+                square.classList.add('sunk');
+            } else {
+                square.classList.add('alive');
+            }
+            shipDiv.appendChild(square);
+        }
+        fleetVisual.appendChild(shipDiv);
+    });
 };
 
 window.addEventListener('DOMContentLoaded', initGame);

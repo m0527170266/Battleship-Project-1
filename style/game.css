@@ -179,11 +179,15 @@ header {
     flex-wrap: wrap;
 }
 
+
 .ship-indicator {
     display: flex;
-    flex-direction: row; /* הצגת הריבועים בשורה */
-    border: 1px solid #ccc;
-    padding: 2px;
+    flex-direction: column-reverse; 
+    align-items: center; /* ממרכז את הקוביות באמצע ה"בניין" */
+    border: 1px solid rgba(255, 255, 255, 0.4); /* מסגרת עדינה */
+    padding: 3px;
+    background-color: rgba(0, 0, 0, 0.2); /* רקע כהה עדין למגדל */
+    border-radius: 5px;
 }
 
 .indicator-square {
@@ -200,4 +204,12 @@ header {
 .indicator-square.sunk {
     background-color: #555; /* אפור לצוללת שהוטבעה */
     opacity: 0.5;
+}
+
+
+.cell.hit.revealed-ship {
+    background-image: url('../image/צוללת.png') !important;
+    background-repeat: no-repeat;
+    background-color: transparent !important;
+    /* ה-JS קובע את ה-background-size וה-position באופן דינמי */
 }
