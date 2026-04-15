@@ -209,7 +209,13 @@ header {
 
 .cell.hit.revealed-ship {
     background-image: url('../image/צוללת.png') !important;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat !important;
     background-color: transparent !important;
-    /* ה-JS קובע את ה-background-size וה-position באופן דינמי */
 }
+
+
+
+
+
+
+

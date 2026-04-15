@@ -3,25 +3,27 @@
  * @param {Event} event - אובייקט האירוע של שליחת הטופס
  */
 const handleLogin = (event) => {
-    // מניעת רענון הדף - דרישה חובה [cite: 25]
+    // מניעת רענון הדף 
     event.preventDefault();
 
-    // שליפת הנתונים מה-DOM [cite: 18, 22]
+    // שליפת הנתונים מה-DOM 
     const nameInput = document.querySelector('#player-name');
     const difficultySelect = document.querySelector('#difficulty');
 
+    //בשביל שנקבל רק מה שהשחקן הקליד
     const playerName = nameInput.value;
     const difficulty = difficultySelect.value;
 
-    // יצירת אובייקט ליטרלי מורכב לשמירת נתוני השחקן [cite: 8, 30]
+    // יצירת אובייקט ליטרלי מורכב לשמירת נתוני השחקן 
     const playerStats = {
         name: playerName,
         score: 0,
         attempts: 0,
-        loginTime: new Date().getTime() // שימוש בפונקציית תאריך [cite: 9]
+        loginTime: new Date().getTime() //  פונקציית תאריך 
     };
 
-    // שמירת האובייקט ב-localStorage (חובה להפוך לטקסט עם JSON.stringify) [cite: 30, 91]
+     //  battleship_player-זה שומר נתונים גם בסגירת מחשב ומ localStorage
+    //  אופך אוביקט לטקסט ארוך JSON.stringify מוציאים נתונים וזה רק מחרוזות ולכן עשינו 
     localStorage.setItem('battleship_player', JSON.stringify(playerStats));
 
     // מעבר לדף המשחק תוך העברת רמת הקושי בכתובת (Query Parameters) 
@@ -35,7 +37,8 @@ const init = () => {
     const loginForm = document.querySelector('#login-form');
     
     if (loginForm) {
-        // הוספת אירוע שליחת טופס דרך הקוד [cite: 24, 25]
+        // הוספת אירוע שליחת טופס דרך הקוד 
+        // כתוב בלי סוגרים כדי שהפונקציה לא תפעל מיד אלא רק שמצביעים עליה handleLogin 
         loginForm.addEventListener('submit', handleLogin);
     }
 };

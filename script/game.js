@@ -121,9 +121,8 @@ const createBoard = () => {
     const board = document.querySelector('#board');
     if (!board) return;
 
-    while (board.firstChild) {
-        board.removeChild(board.firstChild);
-    }
+    // המרת הילדים למערך ומחיקתם - מדגים גישה לבנים 
+Array.from(board.children).forEach(child => child.remove());
 
     board.style.display = "grid";
     board.style.gridTemplateColumns = `repeat(${gameSettings.gridSize}, 48px)`;
@@ -322,6 +321,23 @@ const saveScore = () => {
     localStorage.setItem('battleship_highscores', JSON.stringify(scores));
 };
 
+
+/**
+ * מטפלת בלחיצת מקשים במקלדת - (דרישה: אירוע נוסף מלבד קליק)
+ * @param {KeyboardEvent} event - אובייקט האירוע 
+ */
+const handleKeyPress = (event) => {
+    const overlay = document.querySelector('#game-win-overlay');
+    
+    // שימוש ב-event.key (דרישה: שימוש שני באובייקט ה-Event) 
+    if (overlay && overlay.style.display === 'flex' && event.key === 'Enter') {
+        const nextBtn = document.querySelector('#btn-next-level');
+        if (nextBtn) {
+            nextBtn.click(); // לוחץ אוטומטית על הכפתור בשבילך
+        }
+    }
+};
+
 /**
  * מאתחלת את המשחק.
  */
@@ -341,6 +357,7 @@ const initGame = () => {
             gameSettings.currentLevel = 1;
         }
     }
+    window.addEventListener('keydown', handleKeyPress);
     
     resetLevel(); 
 };
@@ -353,7 +370,9 @@ const updateFleetStatus = () => {
     if (!fleetVisual) return;
 
     // ניקוי התצוגה הקודמת
-    fleetVisual.innerHTML = '';
+while (fleetVisual.firstChild) {
+    fleetVisual.removeChild(fleetVisual.firstChild);
+}
 
     // מעבר על כל הצוללות ויצירת אינדיקטור לכל אחת
     ships.forEach(ship => {
