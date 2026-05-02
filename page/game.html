@@ -15,31 +15,32 @@
 
     <main class="game-container">
         <div id="status-bar">
-            <p>שחקן: <span id="current-player-name">---</span></p>
-            <p id="current-score">ניסיונות: 0</p>
-            <p id="timer-display" style="display:none;">זמן נותר: <span id="time-left">--</span></p>
+            <p>שחקן: <span id="current-player-name">---</span></p> <!-- שומר את שם השחקן -->
+            <p id="current-score">ניסיונות: 0</p> <!-- שומר מספר נסיונות -->
+            <p id="timer-display" style="display:none;">זמן נותר: <span id="time-left">--</span></p> <!-- שומר את הזמן שנותר רק אם יש -->
         </div>
 
-        <div id="board"></div>
+        <div id="board"></div> <!-- שומר את הלוח משחק -->
 
-        <div id="fleet-status-container">
-    <h3 style="color: white; text-shadow: 1px 1px 3px black;">הצי שנותר:</h3>
-    <div id="fleet-visual"></div>
+        <div id="fleet-status-container"> <!--משמש לעיצוב לעשות מסגרת לצי הנותר-->
+            <p id="timer-display" style="display:none;">זמן נותר: <span id="ti
+            <h3 style="color: white; text-shadow: 1px 1px 3px black;>הצי שנותר:</h3>
+        <div id="fleet-visual"></div> <!--המקום שבו רואים את הצי עצמו-->
 </div>
 
         <button id="exit-btn" type="button" onclick="window.location.href='../index.html'">יציאה לתפריט הראשי</button>
     </main>
 
-    <div id="game-win-overlay" class="custom-modal" style="display: none;">
-        <div class="modal-card">
+    <div id="game-win-overlay" class="custom-modal" style="display: none;"><!--המסך המוחשך בכישלון-->
+        <div class="modal-card"><!--הכרטיס הלבן שקופץ-->
             <h2 id="win-title">ניצחון!</h2>
-            <p id="win-stats"></p>
+            <p id="win-stats"></p><!--שורת ההודעה של הניצחון-->
             
-            <div id="trophy-container">
+            <div id="trophy-container"><!--המיכל של הגביע-->
     <img src="../image/גביע-שקוף.jpg" alt="גביע ניצחון" style="width:150px; margin: 20px 0;">
 </div>
 
-            <div class="modal-actions">
+            <div class="modal-actions"><!--הכפתורים בתחתית החלון שקופץ-->
                 <button class="btn-clean" onclick="location.reload()">משחק חדש</button>
                 <button class="btn-clean" id="btn-next-level">שלב הבא</button>
                 <button class="btn-clean" onclick="window.location.href='leaderboard.html'">לטבלת השיאים</button>
@@ -47,6 +48,6 @@
         </div>
     </div>
 
-    <script src="../script/game.js"></script>
+    <script type="module" src="../script/app.js"></script>
 </body>
 </html>

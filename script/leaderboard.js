@@ -5,37 +5,37 @@
 
 /**
  * מאתחלת את דף השיאים, מציגה נתונים ומפעילה את כפתור החזרה.
+ * הפונקציה מבצעת את הפעולות הבאות:
+ * 1. הגדרת מאזין לכפתור חזרה לדף הבית.
+ * 2. שליפת נתוני שיאים מה-LocalStorage.
+ * 3. מיון הנתונים לפי מספר ניסיונות.
+ * 4. יצירה והזרקה דינמית של שורות הטבלה ל-DOM.
  */
-const initLeaderboard = () => {
+export const initLeaderboard = () => {
     const backBtn = document.getElementById('back-btn');
     const tableBody = document.getElementById('leaderboard-body');
 
-    // תיקון כפתור החזרה - שימוש בנתיב ישיר
+    //  כפתור החזרה - שימוש בנתיב ישיר
     if (backBtn) {
         backBtn.addEventListener('click', () => {
+            //window.location.href-משנה את כתובת הדפדפן שילך לעמוד אחר  ויש בדיקה אם הכפתור קיים ולחצו ורק אז פעולת העברה נעשת
             window.location.href = '../index.html';
         });
     }
 
     //(הנתונים נשמרים גם בסגירת מחשב וברענון הדף)שליפת נתונים מהזיכרון
     const rawData = localStorage.getItem('battleship_highscores');
-    //   איברים מעתיק למערך ואם אין יוצר מערך ריק rawData שמירת נתונים בדיקה אם יש ב
+    //     איברים מעתיק למערך והופך מהמחרוזת שוב עי ג'יסון ואם אין יוצר מערך ריק rawData שמירת נתונים בדיקה אם יש ב
     const scores = rawData ? JSON.parse(rawData) : [];
 
-    // if (scores.length > 0) {
-    //     // מיון והצגה 
-    //     scores.sort((a, b) => a.attempts - b.attempts);
-    //     tableBody.innerHTML = scores.map((s, i) => `
-    //         <tr>
-    //             <td>${i + 1}</td>
-    //             <td>${s.name}</td>
-    //             <td>${s.attempts} ניסיונות</td>
-    //         </tr>
-    //     `).join('');//זה לוקח את כל האיברים במערך ומחברם שיהיו בלי רווח
-    // }
 
-    if (scores.length > 0) {
-    // מיון הנתונים
+    //רק אם יש לפחות שיא אחד במערך, תתחיל לעבוד
+   if (scores.length > 0) {
+    /**
+     * פונקציית מיון (Comparator):
+     * מבצעת השוואה בין שני אובייקטים (a ו-b) במערך השיאים.
+     * המיון מתבצע בסדר עולה לפי מאפיין ה-attempts (כמות הניסיונות).
+     */
     scores.sort((a, b) => a.attempts - b.attempts);
 
     // ניקוי הטבלה הקיימת לפני הוספה
@@ -44,7 +44,13 @@ const initLeaderboard = () => {
     // יצירת Fragment כדי לעדכן את ה-DOM פעם אחת בלבד בסוף
     const fragment = document.createDocumentFragment();
 
+    /**
+     * פונקציית מעבר (Callback):
+     * רצה עבור כל איבר (s) ואינדקס (i) במערך scores.
+     * בונה אלמנט <tr> וממלאת אותו בנתוני השחקן.
+     */
     scores.forEach((s, i) => {
+        //יצירת אלמנט HTML חדש מסוג "שורה
         const tr = document.createElement('tr');
 
         // עמודת מיקום
@@ -69,7 +75,3 @@ const initLeaderboard = () => {
     tableBody.appendChild(fragment);
 }
     };
-   
-
-//זה אומר שהקוד ירוץ רק לאחר שהHTML יסיים להטען
-document.addEventListener('DOMContentLoaded', initLeaderboard);

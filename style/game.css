@@ -207,14 +207,20 @@ header {
 }
 
 
-.cell.hit.revealed-ship {
+/* .cell.hit.revealed-ship {
     background-image: url('../image/צוללת.png') !important;
     background-repeat: no-repeat !important;
     background-color: transparent !important;
+} */
+ /* התיקון ב-CSS */
+/* אנחנו משתמשים ב :not כדי להגיד: "תראה את הפיצוץ רק אם אין פה צוללת חשופה" */
+.cell.hit:not(.revealed-ship) {
+    background-image: url('../image/hit.jpg') !important;
+    background-size: contain; /* כדי שהאיקס תמיד יהיה מלא בתוך המשבצת */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(255, 0, 0, 0.2);
 }
-
-
-
 
 
 

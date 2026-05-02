@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -15,9 +16,8 @@
     </header>
 
     <main>
-        <section class="form-container" style="max-width: 600px;">
-            
-            <div id="top-winner-section" style="display: none; text-align: center; margin-bottom: 25px;">
+        <section class="form-container" style="max-width: 600px;">  <!-- לקופסא שאורזת את הטופס -->
+            <div id="top-winner-section" style="display: none; text-align: center; margin-bottom: 25px;">  <!-- זה בשביל המנצח במקום הראשון -->
                 <span style="font-size: 60px;">🏆</span>
                 <h2 id="top-player-name" style="color: #ef4444; margin: 10px 0; font-size: 2.2rem; font-weight: bold;"></h2>
                 <p style="font-size: 1.2rem; font-weight: bold; color: #1a3c5a;">במקום הראשון!</p>
@@ -36,7 +36,7 @@
                         <th>ניסיונות</th>
                     </tr>
                 </thead>
-                <tbody id="leaderboard-body">
+                <tbody id="leaderboard-body">  <!-- השלד של טבלת השיאים --> 
                     <tr>
                         <td colspan="3" style="padding: 30px; color: #666;">
                             עדין אין שיאים... זה הזמן להיות הראשונים בטבלה!
@@ -51,10 +51,20 @@
         </section>
     </main>
 
+
     <footer>
         <p>סמינר מאיר - פרויקט JS</p>
     </footer>
 
-    <script src="../script/leaderboard.js"></script>
+    <!-- <script>
+        // כפתור חזרה לדף הבית
+        document.getElementById('back-to-menu').addEventListener('click', () => {
+            window.location.href = '../index.html';
+        });
+    </script> -->
+        <script type="module" src="../script/app.js"></script>
+
+    
 </body>
 </html>
+
