@@ -33,7 +33,7 @@ const handleLogin = (event) => {
 
      //window.location.href: פקודה של ה-BOM שמשנה את כתובת האתר
     // מעבר לדף המשחק תוך העברת רמת הקושי בכתובת (Query Parameters)-ככה יודע איזה גודל  לוח 
-    window.location.href = `page/game.html?level=${difficulty}`;
+    window.location.href = `page/logika.html?level=${difficulty}`;
 };
 
 /**

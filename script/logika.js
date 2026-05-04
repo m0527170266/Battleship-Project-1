@@ -45,13 +45,13 @@ const playEffect = (audio) => {
  * @description מגדירה טיימר הסופר לאחור ומעדכנת את התצוגה. במידה והזמן נגמר, מופעל מסך כישלון.
  */
 const startTimer = () => {
-    clearInterval(gameSettings.timerInterval);
+    clearInterval(gameSettings.timerInterval);//לסדר שהתיימר הקודם יעצר ויתחיל חדש כל שלב
     const timerArea = document.querySelector('#timer-display');
-    const timerText = document.querySelector('#time-left');
+    const timerText = document.querySelector('#time-left');//שניות שנותרו
 
     if (gameSettings.currentLevel >= 3) {
-        timerArea.style.display = 'block';
-        gameSettings.timeLeft = 60 - ((gameSettings.currentLevel - 3) * 10);/////הסבר
+        timerArea.style.display = 'block';//ככה הטימר מופיע על המסך
+        gameSettings.timeLeft = 60 - ((gameSettings.currentLevel - 3) * 10);//פה בודק איזה רמה וכל רמה מוריד 10 שניות
         timerText.textContent = gameSettings.timeLeft;
 
         /**
@@ -70,7 +70,7 @@ const startTimer = () => {
             }
         }, 1000);
     } else {
-        timerArea.style.display = 'none';
+        timerArea.style.display = 'none';//אם אנו ברמה 1 או 2 מונע מהטימר להופיע
     }
 };
 
@@ -82,8 +82,8 @@ const startTimer = () => {
  * @returns {boolean} אמת אם המיקום פנוי וחוקי, שקר אם יש חריגה מהלוח או התנגשות.
  */
 const canPlaceShip = (startIndex, size, isHorizontal) => {
-    const { gridSize } = gameSettings;
-    const row = Math.floor(startIndex / gridSize);
+    const { gridSize } = gameSettings;//שליפת הערך גרידסיז
+    const row = Math.floor(startIndex / gridSize);//חישוב באיזה שורה אני
 
     for (let i = 0; i < size; i++) {
         // כאן אנחנו מחשבים את המספר של כל משבצת שהצוללת תתפוס
@@ -166,15 +166,15 @@ const createBoard = () => {
 
     for (let i = 0; i < gameSettings.gridSize * gameSettings.gridSize; i++) {
         const cell = document.createElement('div');
-        cell.classList.add('cell');
+        cell.classList.add('cell');//כך מקבל עיצובמהCSS
         cell.dataset.index = i;
-        cell.addEventListener('click', () => handleCellClick(cell));
-        board.appendChild(cell);
+        cell.addEventListener('click', () => handleCellClick(cell));//הפעלת פונקציה ירייה או החטאה
+        board.appendChild(cell);//מכניס את הריבוע ללוח
     }
 };
 
 /**
- * מטפלת בלחיצה על משבצת ובדיקת ניצחון. (תיקון: בדיקת ניצחון מדויקת)
+ * מטפלת בלחיצה על משבצת ובדיקת ניצחון
  * @param {HTMLElement} cell - אלמנט המשבצת שנלחצה.
  * @description בודקת אם יש פגיעה, מעדכנת סטטיסטיקות, מפעילה סאונד ובודקת תנאי ניצחון או הטבעה.
  */
@@ -186,7 +186,7 @@ const handleCellClick = (cell) => {
     //האם יש צוללת שבתוך רשימת המיקומים שלה מופיע המספר שעכשיו לחצו עליו
     const hitShip = ships.find(ship => ship.locations.includes(clickedIndex));
 
-    gameSettings.attempts++;
+    gameSettings.attempts++;//מעלה כמות נסיונות
     document.querySelector('#current-score').textContent = `ניסיונות: ${gameSettings.attempts}`;
 
     if (hitShip) {
@@ -329,7 +329,7 @@ const resetLevel = () => {
     gameSettings.attempts = 0;
     gameSettings.hits = 0;
     gameSettings.totalShipCells = 0; 
-    
+    //יצירת לוח בגודל 6 או 10
     gameSettings.gridSize = Number(gameSettings.currentLevel) === 1 ? 6 : 10;
     
     document.querySelector('#current-score').textContent = `ניסיונות: 0`;
@@ -361,12 +361,12 @@ const startComputerTurn = () => {
  */
 const handleWin = () => {
     //"לוכדים" את כל חלקי חלון הניצחון מה-HTML
-    const overlay = document.querySelector('#game-win-overlay');
-    const title = document.querySelector('#win-title');
-    const stats = document.querySelector('#win-stats');
-    const nextBtn = document.querySelector('#btn-next-level');
+    const overlay = document.querySelector('#game-win-overlay');//המסך המטושטש
+    const title = document.querySelector('#win-title');//כותרת הניצחון
+    const stats = document.querySelector('#win-stats');//כמה נסיונות
+    const nextBtn = document.querySelector('#btn-next-level');//כפתור  שלב הבאה
 
-    if (overlay && title && stats) {
+    if (overlay && title && stats) {//בודק אם כל האלמנטים קימים
         title.textContent = "ניצחון!";
         stats.textContent = `שלב ${gameSettings.currentLevel} הושלם ב-${gameSettings.attempts} ניסיונות!`;
         overlay.style.display = 'flex';
@@ -495,7 +495,7 @@ while (fleetVisual.firstChild) {
             } else {
                 square.classList.add('alive');
             }
-            shipDiv.appendChild(square);
+            shipDiv.appendChild(square);//מכניס את הריבוע ללוח
         }
         //אחרי שסיימנו לצייר את כל הריבועים עבור צוללת מסוימת, אנחנו מדביקים את הכל ללוח
         fleetVisual.appendChild(shipDiv);

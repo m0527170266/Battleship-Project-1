@@ -3,7 +3,7 @@
  * @description הסקריפט הראשי המאחד את כל המודולים ומפעיל אותם לפי סוג הדף.
  */
 
-import { initGame } from './game.js';
+import { initGame } from './logika.js';
 import { initLeaderboard } from './leaderboard.js';
 import { init as initLogin } from './main.js';
 
@@ -17,7 +17,7 @@ const run = () => {
 
     const path = window.location.pathname;
 //בודק איזו פונקציה להפעיל  משחק טבלת ניצחון 
-    if (path.includes('game.html')) {
+    if (path.includes('logika.html')) {
         initGame();
     } else if (path.includes('leaderboard.html')) {
         initLeaderboard();
